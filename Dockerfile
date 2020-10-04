@@ -1,6 +1,8 @@
 FROM node
 EXPOSE 8080
-RUN mkdir /src
-COPY . /src
+RUN mkdir /src \ 
+&& apt-get update -yq \
+&& npm install express 
+COPY /app /src
 WORKDIR /src
-CMD npm start
+CMD node server.js 8080
