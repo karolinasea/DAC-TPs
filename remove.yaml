@@ -1,0 +1,44 @@
+---
+- name: remove stuffs
+  hosts: all
+  become: true
+  
+  tasks:
+  # - name: remove Docker on CentOS
+  #   yum:
+  #     name: docker 
+  #     state: absent
+  #   when: ansible_facts['distribution'] == "CentOS"
+
+  # - name: remove Docker on Ubuntu
+  #   apt: 
+  #     name: docker.io
+  #     state: absent
+  #   when: ansible_facts['distribution'] == "Ubuntu"
+
+  # - name: remove app files and dockerfile
+  #   file: 
+  #     path: /home/dockerfile
+  #     state: absent
+
+  - name: remove webApp container
+    command: docker rm WebApp
+
+  - name: remove webapp image
+    command: docker rmi webapp
+
+  - name: remove node container
+    command: docker rmi node
+
+  
+
+
+
+
+
+
+ 
+    
+
+  
+  

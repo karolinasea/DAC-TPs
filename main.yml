@@ -1,0 +1,66 @@
+---
+- name: install Docker and webapp using 2 docker containers
+  hosts: all
+  become: true
+
+  #ansible-playbook -v main.yml -i hosts.ini
+  
+  tasks:
+
+  - name: install Docker on CentOS
+    yum:
+      name: docker
+      state: latest
+    when: ansible_facts['distribution'] == "CentOS"
+  
+  # - name: update packages
+  #   apt: upgrade=dist force_apt_get=yes
+  #   when: ansible_facts['distribution'] == "Ubuntu"
+
+  - name: install Docker on Ubuntu
+    apt: 
+      name: docker.io
+      state: latest
+    when: ansible_facts['distribution'] == "Ubuntu"
+    
+  - name: Start Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes   
+
+  - name: create file directory 
+    file: 
+      path: /home/dockerfile/
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: copy the app files 
+    copy:
+      src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/app
+      dest: /home/dockerfile
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: copy the Dockerfile 
+    copy:
+      src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/Dockerfile
+      dest: /home/dockerfile/Dockerfile
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: build image from the dockerfile
+    command: docker build -t webapp /home/dockerfile    
+
+  - name: create instance from image 
+    command: docker run -dti -p 8080:80 --name WebApp webapp 
+
+    
+    
+
+  
+  
