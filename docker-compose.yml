@@ -1,0 +1,15 @@
+version: "3.8"
+services: 
+  WebApp: 
+    image: webapp
+    build: .
+    ports:
+      - "8080:80"
+    volumes: 
+      - .:/messages
+#services:
+ # Messagedb:
+  #  image: db
+  
+#volumes:
+ # msgVol: {}

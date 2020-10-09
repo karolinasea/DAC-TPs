@@ -28,6 +28,12 @@
       name: docker
       state: started
       enabled: yes   
+      
+  - name: install docker-compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
 
   - name: create file directory 
     file: 
@@ -39,25 +45,60 @@
 
   - name: copy the app files 
     copy:
-      src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/app
+      #src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/app
+      src: /home/m1eserv/merle/Documents/DAC/TP3/DAC-TPs/app
       dest: /home/dockerfile
       owner: root
       group: root
       mode: '0644'
 
-  - name: copy the Dockerfile 
+  - name: copy the Dockerfile for webapp image
     copy:
-      src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/Dockerfile
+      src: /home/m1eserv/merle/Documents/DAC/TP3/DAC-TPs/Dockerfile
+      #src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/Dockerfile
       dest: /home/dockerfile/Dockerfile
       owner: root
       group: root
       mode: '0644'
+  
+  - name: copy the docker-compose file 
+    copy:
+      src: /home/m1eserv/merle/Documents/DAC/TP3/DAC-TPs/docker-compose.yml
+      #src: /Users/carolemerle/Documents/M1/S1/DAC/TP3/Dockerfile
+      dest: /home/dockerfile/DAC-TPs
+      owner: root
+      group: root
+      mode: '0644'
+  
+  - name: run docker-compose up -d
+    command: docker-compose up -d
 
-  - name: build image from the dockerfile
-    command: docker build -t webapp /home/dockerfile    
+#this will be done with docker compose      
+  #- name: create volume 
+   # command: docker volume create messages
 
-  - name: create container instance named WebApp from webapp image 
-    command: docker run -dti -p 8080:80 --name WebApp webapp 
+  #- name: build webapp image from the dockerfile
+    #command: docker build -t webapp /home/dockerfile    
+
+#this will be done with docker compose
+ # - name: start container instance named WebApp from webapp image with messages volume
+ #   command: docker run -dti -p 8080:80 --name WebApp -v messages:/app webapp 
+    #to check that the volume was create use docker inspect WebApp in the Mounts section
+   
+  #- name: copy the Dockerfile for DB image
+    #copy:
+    #  src: /home/m1eserv/merle/Documents/DAC/TP3/DAC-TPs/db/Dockerfile
+     # dest: /home/db/Dockerfile
+     # owner: root
+     # group: root
+     # mode: '0644'
+   
+  #- name: build db image from the dockerfile
+  #  command: docker build -t db /home/db/dockerfile    
+
+  #- name: start container instance named Msgdb from db image with messages volume
+   # command: docker run -dti --name Msgdb -v messages:/app db
+    
 
     
     
