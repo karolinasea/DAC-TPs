@@ -2,14 +2,45 @@ version: "3.8"
 services: 
   WebApp: 
     image: webapp
-    build: .
+    build: ./webapp
     ports:
-      - "8080:80"
+      - "80:8080"
     volumes: 
-      - .:/messages
-#services:
- # Messagedb:
-  #  image: db
+      - msgVol:/usr/src/messages
+    networks:
+      - app-network
+  db:
+    image: msgdb
+    build: ./db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    # expose:
+    #   - '3306'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  msgVol:
+
+
+
+ 
   
-#volumes:
- # msgVol: {}
+#docker logs idcontainer
+#docker rm -f $(docker ps -aq) //remove all containers even if they are running
+#docker stop $(docker ps -aq) //stop all running containers
+
+
+ # https://stackoverflow.com/questions/44284484/docker-compose-share-named-volume-between-multiple-containers
+ # https://medium.com/better-programming/setting-up-mysql-database-in-a-docker-d6c69a3e9afe
+
+
+#docker run --name msgDB -e MYSQL_ROOT_PASSWORD=mysecretpw -d mysql:latest
+# ... where some-mysql is the name you want to assign to your container, my-secret-pw 
+# is the password to be set for the MySQL root user and tag is the tag specifying the MySQL 
+# version you want. See the list above for relevant tags.
