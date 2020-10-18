@@ -7,8 +7,10 @@ services:
       - "80:8080"
     volumes: 
       - msgVol:/usr/src/messages
-    networks:
-      - app-network
+    restart: always
+    depends_on:
+      - db
+    command: sh -c "dockerize -wait tcp://db:3306 -timeout 300s -wait-retry-interval 5s node server.js"
   db:
     image: msgdb
     build: ./db
@@ -16,20 +18,17 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
+    # command: --init-file ./db/db_files/db_schema.sql
     # expose:
     #   - '3306'
-    networks:
-      - app-network
 
-networks:
-  app-network:
-    driver: bridge
 volumes:
   msgVol:
 
 
 
- 
+#docker-compose up -d --force -recreate 
+
   
 #docker logs idcontainer
 #docker rm -f $(docker ps -aq) //remove all containers even if they are running

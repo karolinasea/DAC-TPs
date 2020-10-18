@@ -2,6 +2,7 @@
 
 const express = require('express');
 let mysql = require('mysql');
+let id = 0;
 
 const PORT = 8080;
 const HOST = '0.0.0.0';
@@ -14,39 +15,49 @@ app.get('/', (req, res) => {
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 
+
 let connection = mysql.createConnection({
     host: 'db',
     user: 'root',
     password: 'example',
+    database: 'messages'
 });
 
 connection.connect(function(err) {
-  if (err) {
-    return console.error('error: ' + err.message);
-  }
-  console.log('Connected to MySQL server.');
-});
+    if (err) {
+      return console.error('ERROR: ' + err.message);
+    }
+    console.log('Connected to MySQL server.');
+  });
 
-// connection.connect(function(err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-//   var sql = "INSERT INTO messages (message) VALUES ('')";
-//   con.query(sql, function (err, result) {
-//     if (err) throw err;
-//     console.log("1 message inserted");
-//   });
-// });
+
+// app.get("/connectdb", function (request, response){
+//     connection.query("SELECT * FROM messages", function (err, result, fields) {
+//     if (err) {
+//     	console.log('ERROR FROM MYSQL DB');
+//     	throw err;
+//     }
+//     console.log(result);
+//     console.log("THE TABLE messages EXISTS SO IT'S ALL GOOD");
+//   	});
+//  });
 
 
 app.get("/getmessage", function (request, response){
-     var message = request.query.message;
- 
-     if (message != "") {
-         //enter it in data base and display it on the page
+    let message = request.query.message;
+ 	// let msg = window.document.getElementById("messageWebPage").value;
+    if (message != "") {
+    	// var sql = "INSERT INTO messages (id, message) VALUES ("+id+", '"+msg+"')";
+  		con.query(sql, function (err, result) {
+   		if (err) throw err;
+    	console.log("LINE INSERTED BITCHES");
+    	id=id+1;
+  });
      } else {
-         response.send("Please provide us first name");
+         response.send("THANK YOU");
      }
  });
+
 
 
 
